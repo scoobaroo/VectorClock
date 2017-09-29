@@ -2,9 +2,6 @@ package VectorClock;
 import java.util.Observable;
 import java.util.Observer;
 
-import edu.dt.Buffer;
-import edu.dt.Message;
-
 public class Processor extends Thread implements Observer {
 	
 	
