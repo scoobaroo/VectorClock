@@ -43,16 +43,16 @@ public class Processor extends Thread implements Observer {
     		Message msg = buffer.getMessage();
     		Event event = msg.getEvent();
     		EventType type = event.getEventType();
-    		VectorClock vc = msg.getVectorClock();			
+    		VectorClock vectorclock = msg.getVectorClock();			
     		switch(type) {
 			case SEND:
 				System.out.println("SEND event found so it is a RECEIVE event at this P" + procID);
 				System.out.println("VectorClock before this RECEIVE event at P" + procID );
-				printArray(vc.getTimestampArray());
-				Event e = new Event(EventType.RECEIVE, vc);
+				printArray(this.vc.getTimestampArray());
+				Event e = new Event(EventType.RECEIVE, vectorclock);
 				executeEvent(e);
 				System.out.println("VectorClock after this RECEIVE event at P" + procID );
-				printArray(vc.getTimestampArray());
+				printArray(this.vc.getTimestampArray());
 				break;
 			default:
 				break;
@@ -82,8 +82,8 @@ public class Processor extends Thread implements Observer {
 				vc.update(i, max);
 			}
 		}
-		if(vc.getTimestampArray()[procID] < vc2.getTimestampArray()[procID]) {
-			vc.update(procID,vc2.getTimestampArray()[procID]+1);
+		if(this.vc.getTimestampArray()[procID] < vc2.getTimestampArray()[procID]) {
+			this.vc.update(procID,vc2.getTimestampArray()[procID]+1);
 		}
 		System.out.println("In P" + procID + "'s calculateVectorClock after calculation " +this.getVc().toString());
     }
@@ -132,7 +132,6 @@ public class Processor extends Thread implements Observer {
 	public static void printArray(int[] array) {
 		System.out.print("[");
 	    for (int i : array) {
-
 	        System.out.print(i + " ");
 	    }
 		System.out.print("]");
