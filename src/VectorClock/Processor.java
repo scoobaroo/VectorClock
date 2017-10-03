@@ -49,7 +49,8 @@ public class Processor extends Thread implements Observer {
 				System.out.println("SEND event found so it is a RECEIVE event at this P" + procID);
 				System.out.println("VectorClock before this RECEIVE event at P" + procID );
 				printArray(vc.getTimestampArray());
-				calculateVectorClocks(vc);
+				Event e = new Event(EventType.RECEIVE, vc);
+				executeEvent(e);
 				System.out.println("VectorClock after this RECEIVE event at P" + procID );
 				printArray(vc.getTimestampArray());
 				break;
@@ -98,6 +99,7 @@ public class Processor extends Thread implements Observer {
 			System.out.println("VectorClock before RECEIVE event at P" + procID );
 			printArray(vc.getTimestampArray());
 			vc.update(procID, vc.getTimestampArray()[procID]+1);
+			calculateVectorClocks(event.getVectorClock());
 			System.out.println("VectorClock after RECEIVE event at P" + procID );
 			printArray(vc.getTimestampArray());
 			eventCount++;

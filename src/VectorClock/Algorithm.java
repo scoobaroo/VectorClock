@@ -44,29 +44,35 @@ public class Algorithm {
 //	}
 	
 	public void hardcodeExecutionPlan() {
-		Event receive = new Event(EventType.RECEIVE);
+		
 		Event compute = new Event(EventType.COMPUTE);
 		p2.executeEvent(compute);
-		Event e1 = new Event(EventType.SEND,p0,p1);
+		Event e1 = new Event(EventType.SEND, p0.getVc(),p0,p1);
 		p0.executeEvent(e1);
 		p2.executeEvent(compute);
-		p1.executeEvent(receive);
-		Event e12 = new Event(EventType.SEND,p2,p1);
+//		Event receive1 = new Event(EventType.RECEIVE,p0.getVc());
+//		p1.executeEvent(receive1);
+		Event e12 = new Event(EventType.SEND, p2.getVc(),p2,p1);
 		p2.executeEvent(e12);
-		p1.executeEvent(receive);
-		Event e2 = new Event(EventType.SEND,p0,p2);
+//		Event receive2 = new Event(EventType.RECEIVE,p2.getVc());
+//		p1.executeEvent(receive2);
+		Event e2 = new Event(EventType.SEND, p0.getVc(),p0,p2);
 		p0.executeEvent(e2);
-		p2.executeEvent(receive);
-		Event e14 = new Event(EventType.SEND,p2,p1);
+//		Event receive3 = new Event(EventType.RECEIVE,p0.getVc());
+//		p2.executeEvent(receive3);
+		Event e14 = new Event(EventType.SEND,p2.getVc(),p2,p1);
 		p2.executeEvent(e14);
-		Event e8 = new Event(EventType.SEND,p1,p2);
+		Event e8 = new Event(EventType.SEND,p1.getVc(),p1,p2);
 		p1.executeEvent(e8);
 		p0.executeEvent(compute);
-		p2.executeEvent(receive);
-//		p1.executeEvent(receive);
-		Event e17 = new Event(EventType.SEND,p1,p0);
+//		Event receive4 = new Event(EventType.RECEIVE,p1.getVc());
+//		p2.executeEvent(receive4);
+//		Event receive5 = new Event(EventType.RECEIVE,p2.getVc());
+//		p1.executeEvent(receive5);
+		Event e17 = new Event(EventType.SEND,p1.getVc(),p1,p0);
 		p1.executeEvent(e17);
-		p0.executeEvent(receive);
+//		Event receive6 = new Event(EventType.RECEIVE,p1.getVc());
+//		p0.executeEvent(receive6);
 		p2.executeEvent(compute);
 		p0.executeEvent(compute);
 	}
