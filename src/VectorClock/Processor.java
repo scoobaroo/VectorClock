@@ -47,11 +47,13 @@ public class Processor extends Thread implements Observer {
     		switch(type) {
 			case SEND:
 				System.out.println("SEND event found so it is a RECEIVE event at this P" + procID);
-				System.out.println("VectorClock before this RECEIVE event at P" + procID );
 				printArray(this.vc.getTimestampArray());
 				Event e = new Event(EventType.RECEIVE, vectorclock);
-				executeEvent(e);
-				System.out.println("VectorClock after this RECEIVE event at P" + procID );
+				try {
+					executeEvent(e);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				printArray(this.vc.getTimestampArray());
 				break;
 			default:
@@ -76,14 +78,9 @@ public class Processor extends Thread implements Observer {
     public void calculateVectorClocks(VectorClock vc2) {
     		System.out.println("In P" + procID + "'s calculateVectorClock, before calculation " +this.getVc().toString());
 		for(int i = 0;i < numProcessors; i++) {
-			if(i != procID) {
-				int max = Math.max(vc.getTimestampArray()[i], vc2.getTimestampArray()[i]);
-				System.out.println("Inside max function, max = "+ max);
-				vc.update(i, max);
-			}
-		}
-		if(this.vc.getTimestampArray()[procID] < vc2.getTimestampArray()[procID]) {
-			this.vc.update(procID,vc2.getTimestampArray()[procID]+1);
+			int max = Math.max(vc.getTimestampArray()[i], vc2.getTimestampArray()[i]);
+			System.out.println("Inside max function, max = "+ max);
+			vc.update(i, max);
 		}
 		System.out.println("In P" + procID + "'s calculateVectorClock after calculation " +this.getVc().toString());
     }
@@ -93,7 +90,7 @@ public class Processor extends Thread implements Observer {
     		System.out.println("inside run method of P" + procID);
     }
     
-    public void executeEvent(Event event) {
+    public void executeEvent(Event event) throws InterruptedException {
 		switch(event.getEventType()) {
 		case RECEIVE:
 			System.out.println("VectorClock before RECEIVE event at P" + procID );
@@ -119,7 +116,7 @@ public class Processor extends Thread implements Observer {
 			System.out.println("VectorClock before compute event at P" + procID );
 			printArray(vc.getTimestampArray());
 			System.out.println("COMPUTING at P"+procID);
-			vc.update(procID , vc.getTimestampArray()[this.procID]+1);
+			vc.update(procID , vc.getTimestampArray()[procID]+1);
 			System.out.println("VectorClock after compute event at P" + procID );
 			printArray(vc.getTimestampArray());
 			eventCount++;
@@ -127,7 +124,7 @@ public class Processor extends Thread implements Observer {
 		default:
 			break;
 		}
-
+		Thread.sleep(200);
     }
 	public static void printArray(int[] array) {
 		System.out.print("[");
