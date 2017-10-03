@@ -1,5 +1,5 @@
 package VectorClock;
 
 public enum EventType {
-	COMPUTE,SEND,RECEIVE
+	COMPUTE,SEND,RECEIVE;
 }

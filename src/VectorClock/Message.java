@@ -2,29 +2,38 @@ package VectorClock;
 
 public class Message {
 	private Event event;
-	private Processor sender;
-	private Processor receiver;
-	public Message(Event e, Processor s, Processor r) {
-		setEvent(e);
-		setSender(s);
-		setReceiver(r);
+	private Processor fromProcessor;
+	private Processor toProcessor;
+	private VectorClock vectorClock;
+	public Message(Event event, VectorClock vc, Processor fromProcessor, Processor toProcessor) {
+		this.vectorClock = vc;
+		this.event = event;
+		this.fromProcessor = fromProcessor;
+		this.toProcessor = toProcessor;
+	}
+	public VectorClock getVectorClock() {
+		return vectorClock;
+	}
+	public void setVectorClock(VectorClock vectorClock) {
+		this.vectorClock = vectorClock;
 	}
 	public Event getEvent() {
-		return event;
+		return this.event;
 	}
 	public void setEvent(Event event) {
 		this.event = event;
 	}
-	public Processor getSender() {
-		return sender;
+	public Processor getFromProcessor() {
+		return this.fromProcessor;
 	}
-	public void setSender(Processor sender) {
-		this.sender = sender;
+	public void setFromProcessor(Processor fromProcessor) {
+		this.fromProcessor = fromProcessor;
 	}
-	public Processor getReceiver() {
-		return receiver;
+	public Processor getToProcessor() {
+		return this.toProcessor;
 	}
-	public void setReceiver(Processor receiver) {
-		this.receiver = receiver;
-	}	
+	public void setToProcessor(Processor toProcessor) {
+		this.toProcessor = toProcessor;
+	}
+	
 }

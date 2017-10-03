@@ -5,6 +5,7 @@ import java.util.Observable;
 public class Buffer extends Observable {
     private Message message;
     public Buffer(){
+        //Create an empty Buffer
     }
     public Buffer(Message message) {
         this.message = message;

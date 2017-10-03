@@ -1,58 +1,111 @@
 package VectorClock;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-
-
-public class Algorithm {
-
-	public Map<Processor, List<Event>> getExecutionPlan(String filepath) throws IOException {
-		
-		Map <Processor,List<Event>> executionPlan = new HashMap <Processor,List<Event>> ();
-		
-		
-		
-		Scanner fileScanner = new Scanner(filepath);
-		//open file mentioned in filepath
-		//fetch processor and and its list of events from text file
-		//store that data in map executionPlan with key as a Processor and its value as a list of events
-		String line = fileScanner.nextLine();
-		
-		return executionPlan; 
+public class Algorithm {	
+	int noOfProcessors;
+	Processor p0,p1,p2;
+	public Algorithm(int noOfProcessors) {
+		this.noOfProcessors = noOfProcessors;
+		p0 = new Processor(0, noOfProcessors,"Thread"+Integer.toString(0));
+		p1 = new Processor(1, noOfProcessors, "Thread"+Integer.toString(1));
+		p2 = new Processor(2, noOfProcessors,"Thread"+Integer.toString(2));
 	}
+//	public void hardcodeExecutionPlan() {
+//		List<Event> eventList0 = new ArrayList<Event>();
+//		Event e1 = new Event(EventType.SEND,p0,p1);
+//		eventList0.add(e1);
+//		Event e2 = new Event(EventType.SEND,p0,p2);
+//		eventList0.add(e2);
+//		Event e3 = new Event(EventType.COMPUTE);
+//		eventList0.add(e3);
+//		Event e5 = new Event(EventType.COMPUTE);
+//		eventList0.add(e5);
+//		p0.setEvents(eventList0);
+//		
+//		List<Event> eventList1 = new ArrayList<Event>();
+//		Event e8 = new Event(EventType.SEND,p1,p2);
+//		eventList1.add(e8);
+//		Event e17 = new Event(EventType.SEND,p1,p0);
+//		eventList1.add(e17);
+//		p1.setEvents(eventList1);
+//		
+//		
+//		List<Event> eventList2 = new ArrayList<Event>();
+//		Event e10 = new Event(EventType.COMPUTE);
+//		eventList2.add(e10);
+//		Event e11 = new Event(EventType.COMPUTE);
+//		eventList2.add(e11);
+//		Event e12 = new Event(EventType.SEND,p2,p1);
+//		eventList2.add(e12);
+//		Event e14 = new Event(EventType.SEND,p2,p1);
+//		eventList2.add(e14);
+//		Event e16 = new Event(EventType.COMPUTE);
+//		eventList2.add(e16);
+//		p2.setEvents(eventList2);
+//	}
 	
-	public void execute(Map <Processor,List<Event>> executionPlan) {
-		
-		Iterator<Entry<Processor, List<Event>>> iter = executionPlan.entrySet().iterator();
-		while(iter.hasNext()) {
-			Processor p = iter.next().getKey();
-			p.start();
-		}
+	public void hardcodeExecutionPlan() {
+		Event receive = new Event(EventType.RECEIVE);
+		Event compute = new Event(EventType.COMPUTE);
+		p2.executeEvent(compute);
+		Event e1 = new Event(EventType.SEND,p0,p1);
+		p0.executeEvent(e1);
+		p2.executeEvent(compute);
+		p1.executeEvent(receive);
+		Event e12 = new Event(EventType.SEND,p2,p1);
+		p2.executeEvent(e12);
+		p1.executeEvent(receive);
+		Event e2 = new Event(EventType.SEND,p0,p2);
+		p0.executeEvent(e2);
+		p2.executeEvent(receive);
+		Event e14 = new Event(EventType.SEND,p2,p1);
+		p2.executeEvent(e14);
+		Event e8 = new Event(EventType.SEND,p1,p2);
+		p1.executeEvent(e8);
+		p0.executeEvent(compute);
+		p2.executeEvent(receive);
+//		p1.executeEvent(receive);
+		Event e17 = new Event(EventType.SEND,p1,p0);
+		p1.executeEvent(e17);
+		p0.executeEvent(receive);
+		p2.executeEvent(compute);
+		p0.executeEvent(compute);
 	}
 	
 	public static void main(String[] args) {
-		Algorithm algo = new Algorithm();
-		
-		//get execution plan from text file
-		Map<Processor, List<Event>> executionPlan;
+		Algorithm algo = new Algorithm(3);
+		algo.init();
+	}
+	
+	public void init() {
 		try {
-			executionPlan = algo.getExecutionPlan(args[1]);
-			algo.execute(executionPlan);
-		} catch (IOException e) {
+			hardcodeExecutionPlan();
+			int [] vc0 = p0.getVc().getTimestampArray();
+			System.out.println("Event count at p0: "+ p0.eventCount);
+			System.out.print("\nVector Clock at Processor P0:\t[");
+			for (int i = 0; i < noOfProcessors; i++) {
+				System.out.print(vc0[i]+" ");
+			}
+			System.out.print("]");
+			System.out.println();
+			System.out.println("Event count at p1: "+ p1.eventCount);
+			System.out.print("\nVector Clock at Processor P1:\t[");
+			int [] vc1 = p1.getVc().getTimestampArray();
+			for (int i = 0; i < noOfProcessors; i++) {
+				System.out.print(vc1[i]+" ");
+			}
+			System.out.print("]");
+			System.out.println();
+			System.out.println("Event count at p2: "+ p2.eventCount);
+			System.out.print("\nVector Clock at Processor P2:\t[");
+			int [] vc2 = p2.getVc().getTimestampArray();
+			for (int i = 0; i < noOfProcessors; i++) {
+				System.out.print(vc2[i]+" ");
+			}
+			System.out.print("]");
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//execute the execution plan and compute vector clocks for all processors
-		
 	}
+	
 }
