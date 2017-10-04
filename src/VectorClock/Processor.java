@@ -42,12 +42,13 @@ public class Processor extends Thread implements Observer {
 	public void sendMessageToMyBuffer(Message msg){
 		this.messageBuffer.setMessage(msg);
     }
+	
     public void update(Observable observable, Object arg) {
     		Buffer buffer = (Buffer) observable;
     		Message msg = buffer.getMessage();
     		Event event = msg.getEvent();
     		EventType type = event.getEventType();
-    		Processor sendingProcessor = msg.getFromProcessor();			
+    		Processor sendingProcessor = msg.getFromProcessor();
     		switch(type) {
 			case SEND:
 				System.out.println("SEND event found so it is a RECEIVE event at this P" + procID);
@@ -92,12 +93,14 @@ public class Processor extends Thread implements Observer {
     @Override
     public void run() {
     		System.out.println("inside run method of P" + procID);
-    		for(Event event: eventList) {
-    			try {
-					executeEvent(event);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+    		synchronized(this) {
+	    		for(Event event: eventList) {
+	    			try {
+						executeEvent(event);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+	    		}
     		}
     }
     
@@ -135,14 +138,11 @@ public class Processor extends Thread implements Observer {
 		default:
 			break;
 		}
-		Thread.sleep(200);
     }
 	public static void printArray(int[] array) {
-		System.out.print("[");
 	    for (int i : array) {
 	        System.out.print(i + " ");
 	    }
-		System.out.print("]");
 		System.out.println();
 	}
 	public void setEvents(List<Event> eventList) {
