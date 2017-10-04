@@ -4,19 +4,17 @@ public class Event {
 	private EventType eventtype;
 	private Processor fromProcessor;
 	private Processor toProcessor;
-	private VectorClock vc;
 	public Event(EventType et) {
 		setEventType(et);
 	}
-	public Event(EventType et, VectorClock vc) {
+	public Event(EventType et, Processor from) {
 		setEventType(et);
-		setVectorClock(vc);
+		setFromProcessor(from);
 	}
-	public Event(EventType et, VectorClock vc, Processor from,Processor to) {
+	public Event(EventType et, Processor from,Processor to) {
 		setEventType(et);
 		setFromProcessor(from);
 		setToProcessor(to);
-		setVectorClock(vc);
 	}
 	public EventType getEventType() {
 		return eventtype;
@@ -35,11 +33,5 @@ public class Event {
 	}
 	public void setToProcessor(Processor toProcessor) {
 		this.toProcessor = toProcessor;
-	}
-	public VectorClock getVectorClock() {
-		return vc;
-	}
-	public void setVectorClock(VectorClock vc) {
-		this.vc = vc;
 	}
 }
