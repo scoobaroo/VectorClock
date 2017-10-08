@@ -107,7 +107,9 @@ public class Algorithm {
 				System.out.print(vc2[i]+" ");
 			}
 			System.out.print("]");
-			computeMaximumConsistentCut(new int[]{2,3,4});
+			int[] result = computeMaximumConsistentCut(new int[]{3,4,5});
+			System.out.println();
+			printArray(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,20 +120,47 @@ public class Algorithm {
 		ArrayList<VectorClock> p0store = p0.getStore();
 		ArrayList<VectorClock> p1store = p1.getStore();
 		ArrayList<VectorClock> p2store = p2.getStore();
-		VectorClock p0vc = p0store.get(inputcut[0]);
-		VectorClock p1vc = p1store.get(inputcut[1]);
-		VectorClock p2vc = p2store.get(inputcut[2]);
-		int[] p0TimestampArray = p0vc.getTimestampArray();
-		int[] p1TimestampArray = p1vc.getTimestampArray();
-		int[] p2TimestampArray = p2vc.getTimestampArray();
-		List<Event> p0events = p0.getEventsThatHappened();
-		List<Event> p1events = p1.getEventsThatHappened();
-		List<Event> p2events = p2.getEventsThatHappened();
-		if(p0events.get(inputcut[0]).getEventType() == EventType.COMPUTE
-		&& p1events.get(inputcut[1]).getEventType() == EventType.COMPUTE 
-		&& p2events.get(inputcut[2]).getEventType() == EventType.COMPUTE){
-			return inputcut;
+		System.out.println(p0store.size());
+		System.out.println(p1store.size());
+		System.out.println(p2store.size());
+		System.out.println(p0store.get(4));
+		VectorClock p0vc = p0store.get(inputcut[0]-1);
+		VectorClock p1vc = p1store.get(inputcut[1]-1);
+		VectorClock p2vc = p2store.get(inputcut[2]-1);
+
+//		int[] p0TimestampArray = p0vc.getTimestampArray();
+//		int[] p1TimestampArray = p1vc.getTimestampArray();
+//		int[] p2TimestampArray = p2vc.getTimestampArray();
+//		List<Event> p0events = p0.getEventsThatHappened();
+//		List<Event> p1events = p1.getEventsThatHappened();
+//		List<Event> p2events = p2.getEventsThatHappened();
+		if(p0vc.happenBefore(inputcut)==-1) {
+			result[0] = inputcut[0];
+		}
+		else {
+			int index = p0vc.happenBefore(inputcut);
+			result[index] = inputcut[index]-1;
+		}
+		if(p1vc.happenBefore(inputcut)==-1) {
+			result[1] = inputcut[1];
+		}
+		else {
+			int index = p1vc.happenBefore(inputcut);
+			result[index] = inputcut[index]-1;
+		}
+		if(p2vc.happenBefore(inputcut)==-1) {
+			result[2] = inputcut[2];
+		}
+		else {
+			int index = p2vc.happenBefore(inputcut);
+			result[index] = inputcut[index]-1;
 		}
 		return result;
+	}
+	public static void printArray(int[] array) {
+	    for (int i : array) {
+	        System.out.print(i + " ");
+	    }
+		System.out.println();
 	}
 }

@@ -23,14 +23,13 @@ public class VectorClock {
 		return "VectorClock [VC=" + Arrays.toString(this.getTimestampArray()) + "]";
 	}
 	
-	public boolean happenBefore(VectorClock vc2) {
-		int[] comparingArray = vc2.getTimestampArray();
+	public int happenBefore(int[] cut) {
 		for(int i = 0; i < timestampArray.length; i ++) {
-			if(timestampArray[i] > comparingArray[i]) {
-				System.out.println("element at" + i + " position in timestampArray is greater vc2[i]");
-				return false;
+			if(timestampArray[i] > cut[i]) {
+				System.out.println("element at" + i + " position in timestampArray is greater than cut["+i+"]");
+				return i;
 			}
 		}
-		return true;
+		return -1;
 	}
 }
