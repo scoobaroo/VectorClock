@@ -20,7 +20,17 @@ public class VectorClock {
 	
 	@Override
 	public String toString() {
-		return "VectorClock [vc=" + Arrays.toString(this.getTimestampArray()) + "]";
+		return "VectorClock [VC=" + Arrays.toString(this.getTimestampArray()) + "]";
 	}
 	
+	public boolean happenBefore(VectorClock vc2) {
+		int[] comparingArray = vc2.getTimestampArray();
+		for(int i = 0; i < timestampArray.length; i ++) {
+			if(timestampArray[i] > comparingArray[i]) {
+				System.out.println("element at" + i + " position in timestampArray is greater vc2[i]");
+				return false;
+			}
+		}
+		return true;
+	}
 }

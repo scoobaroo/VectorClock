@@ -8,18 +8,30 @@ public class Processor extends Thread implements Observer {
     private Buffer messageBuffer ;
     private int procID ;
 	private VectorClock vc ; 
-	private String threadname;
-    public int eventCount;
+    private int eventCount;
     private int numProcessors;
+    List<Event> eventsThatHappened;
     List<Event> eventList;
+    private ArrayList<VectorClock> store;
+    
     public Processor(int id, int totalProcessors, String threadName) {
     		eventList = new ArrayList<Event>();
+    		eventsThatHappened = new ArrayList<Event>();
+    		store = new ArrayList<VectorClock>();
         this.messageBuffer = new Buffer(); 
     		this.procID = id; 
     		this.numProcessors = totalProcessors;
         this.vc = new VectorClock(totalProcessors);
-        this.threadname = threadName;
         this.messageBuffer.addObserver(this);
+    }
+    public List<Event> getEventsThatHappened(){
+    		return this.eventsThatHappened;
+    }
+    public int getEventCount() {
+    		return this.eventCount;
+    }
+    public ArrayList<VectorClock> getStore(){
+    		return this.store;
     }
     public int getProcID() {
 		return procID;
@@ -44,26 +56,26 @@ public class Processor extends Thread implements Observer {
     }
 	
     public void update(Observable observable, Object arg) {
-    		Buffer buffer = (Buffer) observable;
-    		Message msg = buffer.getMessage();
-    		Event event = msg.getEvent();
-    		EventType type = event.getEventType();
-    		Processor sendingProcessor = msg.getFromProcessor();
-    		switch(type) {
-			case SEND:
-				System.out.println("SEND event found so it is a RECEIVE event at this P" + procID);
-				printArray(this.vc.getTimestampArray());
-				Event e = new Event(EventType.RECEIVE, sendingProcessor);
-				try {
-					executeEvent(e);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				printArray(this.vc.getTimestampArray());
-				break;
-			default:
-				break;
-		}
+//    		Buffer buffer = (Buffer) observable;
+//    		Message msg = buffer.getMessage();
+//    		Event event = msg.getEvent();
+//    		EventType type = event.getEventType();
+//    		Processor sendingProcessor = msg.getFromProcessor();
+//    		switch(type) {
+//			case SEND:
+//				System.out.println("SEND event found so it is a RECEIVE event at this P" + procID);
+//				printArray(this.vc.getTimestampArray());
+//				Event e = new Event(EventType.RECEIVE, sendingProcessor);
+//				try {
+//					executeEvent(e);
+//				} catch (InterruptedException e1) {
+//					e1.printStackTrace();
+//				}
+//				printArray(this.vc.getTimestampArray());
+//				break;
+//			default:
+//				break;
+//		}
 	}
     
 	public int compareTo(VectorClock receivedVC) {
@@ -90,21 +102,22 @@ public class Processor extends Thread implements Observer {
 		System.out.println("In P" + procID + "'s calculateVectorClock after calculation " +this.getVc().toString());
     }
     
-    @Override
-    public void run() {
-    		System.out.println("inside run method of P" + procID);
-    		synchronized(this) {
-	    		for(Event event: eventList) {
-	    			try {
-						executeEvent(event);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-	    		}
-    		}
-    }
-    
+//    @Override
+//    public void run() {
+//    		System.out.println("inside run method of P" + procID);
+//    		synchronized(this) {
+//	    		for(Event event: eventList) {
+//	    			try {
+//						executeEvent(event);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//	    		}
+//    		}
+//    }
+//    
     public void executeEvent(Event event) throws InterruptedException {
+    		eventsThatHappened.add(event);
 		switch(event.getEventType()) {
 		case RECEIVE:
 			System.out.println("VectorClock before RECEIVE event at P" + procID );
@@ -113,7 +126,9 @@ public class Processor extends Thread implements Observer {
 			calculateVectorClocks(event.getFromProcessor().getVc());
 			System.out.println("VectorClock after RECEIVE event at P" + procID );
 			printArray(vc.getTimestampArray());
+			store.add(vc);
 			eventCount++;
+//			sleep(500);
 			break;
 		case SEND:
 			System.out.println("P" + procID + " SEND to P" +event.getToProcessor().getProcID());
@@ -124,7 +139,9 @@ public class Processor extends Thread implements Observer {
 			System.out.println("VectorClock after SEND event at P" + procID );
 			printArray(vc.getTimestampArray());
 			event.getToProcessor().sendMessageToMyBuffer(message);
+			store.add(vc);
 			eventCount++;
+			sleep(500);
 			break;
 		case COMPUTE:
 			System.out.println("VectorClock before compute event at P" + procID );
@@ -133,7 +150,9 @@ public class Processor extends Thread implements Observer {
 			vc.update(procID , vc.getTimestampArray()[procID]+1);
 			System.out.println("VectorClock after compute event at P" + procID );
 			printArray(vc.getTimestampArray());
+			store.add(vc);
 			eventCount++;
+//			sleep(500);
 			break;
 		default:
 			break;
