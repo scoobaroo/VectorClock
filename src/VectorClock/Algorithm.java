@@ -107,7 +107,7 @@ public class Algorithm {
 				System.out.print(vc2[i]+" ");
 			}
 			System.out.print("]");
-			int[] result = computeMaximumConsistentCut(new int[]{3,4,5});
+			int[] result = computeMaximumConsistentCut(new int[]{5,4,5});
 			System.out.println();
 			printArray(result);
 		} catch (Exception e) {
@@ -127,7 +127,6 @@ public class Algorithm {
 		VectorClock p0vc = p0store.get(inputcut[0]-1);
 		VectorClock p1vc = p1store.get(inputcut[1]-1);
 		VectorClock p2vc = p2store.get(inputcut[2]-1);
-
 //		int[] p0TimestampArray = p0vc.getTimestampArray();
 //		int[] p1TimestampArray = p1vc.getTimestampArray();
 //		int[] p2TimestampArray = p2vc.getTimestampArray();

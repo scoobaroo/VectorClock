@@ -26,7 +26,7 @@ public class VectorClock {
 	public int happenBefore(int[] cut) {
 		for(int i = 0; i < timestampArray.length; i ++) {
 			if(timestampArray[i] > cut[i]) {
-				System.out.println("element at" + i + " position in timestampArray is greater than cut["+i+"]");
+				System.out.println("timestampArray[" + i + "] is greater than cut["+i+"]");
 				return i;
 			}
 		}
