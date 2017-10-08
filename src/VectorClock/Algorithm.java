@@ -108,7 +108,7 @@ public class Algorithm {
 			}
 			System.out.print("]");
 			int[] result = computeMaximumConsistentCut(new int[]{5,4,5});
-			System.out.println();
+			System.out.println("Maximum consistent cut:");
 			printArray(result);
 		} catch (Exception e) {
 			e.printStackTrace();
